@@ -7,6 +7,8 @@
 #include <unistd.h> // read()
 #include <thread>
 #include <regex>
+#include <cstdlib>
+#include <time.h>
 #define PORT 8000
 using namespace std;
 
@@ -33,14 +35,32 @@ void recv_msg(int sockfd)
 	}
 }
 
-void send_msg(int sockfd)
+void send_msg(int sockfd, string username)
 {
 	while(1)
 	{
 		string msg;
 		getline(cin,msg);
+		msg = username + ": " + msg;
 		send(sockfd, msg.c_str(), msg.length(), 0);
 	}
+}
+
+string receive_single_msg(int sockfd)
+{
+	char buffer[1024] = {0};
+	int valread = read(sockfd, buffer, 1024);
+	string bufstr(buffer);
+	return bufstr;
+}
+
+void random_colorize(string &str)
+{
+	vector<string> colors = vector<string>{"\033[31m","\033[32m","\033[33m","\033[34m","\033[35m","\033[36m","\033[37m"};
+	string reset = "\033[0m";
+	srand(time(0));
+	int idx = rand() % colors.size();
+	str = colors[idx] + str + reset;
 }
 
 int main(int argc, char **argv)
@@ -61,9 +81,22 @@ int main(int argc, char **argv)
 	if (connect(sockfd, (sockaddr *)&address, sizeof(address))<0)
 		exit_with_error("Error in connect()");
 
-	// r+w can be in any order
+	cout << "Enter server password..." << endl;
+	string password;
+	getline(cin, password);
+	send(sockfd, password.c_str(), password.length(), 0);
+	string bufstr = receive_single_msg(sockfd);
+	if (bufstr=="bad") exit_with_error("Bad password...");
+	cout << "Welcome to our server..." << endl;
+	cout << "Enter your username..." << endl;
+	string username;
+	getline(cin, username);
+	random_colorize(username);
+	send(sockfd, username.c_str(), username.length(), 0);
+	cout << "Hi "<<username<<", You have been added to the server.\nJust type your message and press ↵\nThis is like any other group chatting app!" << endl;
+
 	thread recv_thread(recv_msg, sockfd);
-	thread send_thread(send_msg, sockfd);
+	thread send_thread(send_msg, sockfd, username);
 	recv_thread.join();
 	send_thread.join();
 	return 0;

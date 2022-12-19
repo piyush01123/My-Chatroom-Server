@@ -5,8 +5,10 @@
 #include <netinet/in.h> // sockaddr()
 #include <unistd.h> // read()
 #include <thread>
+#include <vector>
 #define PORT 8000
 using namespace std;
+vector<int> clients;
 
 void exit_with_error(string err_msg)
 {
@@ -14,31 +16,44 @@ void exit_with_error(string err_msg)
 	exit(1);
 }
 
-void recv_msg(int client_sockfd)
+void send_to_all(string msg, int sender)
 {
+	for (int client_fd: clients)
+	{
+		if (client_fd==sender) continue;
+		send(client_fd, msg.c_str(), msg.length(), 0);
+	}
+}
+
+void recv_msg(int client_fd)
+{
+	cout << "Client " << client_fd << " will be listened from now on..."<<endl;
 	while(1)
 	{
 		char buffer[1024] = {0};
-		int valread = read(client_sockfd, buffer, 1024);
+		int valread = read(client_fd, buffer, 1024);
 		string bufstr(buffer);
-		cout << bufstr << endl;	
+		cout << "new msg from " << client_fd << endl;
+		cout << bufstr << endl;
+		send_to_all(bufstr, client_fd);
 	}
 }
 
-void send_msg(int client_sockfd)
+string receive_single_msg(int client_sockfd)
 {
-	while(1)
-	{
-		string msg;
-		getline(cin,msg);
-		send(client_sockfd, msg.c_str(), msg.length(), 0);
-	}
+	char buffer[1024] = {0};
+	int valread = read(client_sockfd, buffer, 1024);
+	string bufstr(buffer);
+	return bufstr;
 }
 
-// server: socket() -> bind() -> listen() -> accept() -> r+w
-// client: socket() -> connect() -> r+w
+
 int main()
 {
+	cout << "Enter server password to be used for login..." << endl;
+	string password;
+	getline(cin, password);
+
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0), opt=1; // creates socket
 	if (sockfd<0)  exit_with_error("Error creating socket");
 	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)); // force use addr
@@ -53,13 +68,23 @@ int main()
 		exit_with_error("Error in listening");
 
 	int addr_len = sizeof(address);
-	int client_sockfd = accept(sockfd,(sockaddr *)&address, (socklen_t *)&addr_len);
-	if (client_sockfd<0) exit_with_error("Error in accepting client");
-
-	// r+w can be in any order
-	thread recv_thread(recv_msg, client_sockfd);
-	thread send_thread(send_msg, client_sockfd);
-	recv_thread.join();
-	send_thread.join();
+	vector<thread> threads;
+	while(1)
+	{
+		cout << "Listening..."<<endl; 
+		int client_sockfd = accept(sockfd,(sockaddr *)&address, (socklen_t *)&addr_len);
+		if (client_sockfd<0) exit_with_error("Error in accepting client");
+		string password_recv = receive_single_msg(client_sockfd);
+		cout << "New client:" << client_sockfd << endl;
+		string good="good", bad="bad";
+		if (password_recv==password) send(client_sockfd, good.c_str(), good.length(), 0);
+		else send(client_sockfd, bad.c_str(), bad.length(), 0);
+		string username = receive_single_msg(client_sockfd);
+		cout << username << " has been added..." << endl;
+		clients.push_back(client_sockfd);
+		thread th(recv_msg, client_sockfd);
+		threads.push_back(move(th));
+	}
+	for (auto &t: threads) t.join();
 	return 0;
 }
