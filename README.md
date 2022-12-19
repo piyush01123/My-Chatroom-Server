@@ -1,8 +1,8 @@
 
 # Toy ChatServer
-
+<p align="center">
 <img src="images/groupchat.png" width="100" >
-
+</p>
 This is a toy chat server. To use, just [download](https://github.com/piyush01123/Toy-ChatServer/releases/tag/binaries) and run the binaries as per your OS (Tested on MacOS and Ubuntu).
 
 **Main ideas:** Multi-threading, Socket programming
@@ -36,14 +36,18 @@ Run client with tracker's IP address as argument (must be on same network or els
 ```
 
 ## Snapshots
-View from tracker:
+#### View from tracker:
+
 <img src="images/tracker.png" >
 
-View from alpha:
+#### View from alpha:
+
 <img src="images/alpha.png" >
 
-View from beta:
+#### View from beta:
+
 <img src="images/beta.png" >
 
-View from gamma:
+#### View from gamma:
+
 <img src="images/gamma.png" >
