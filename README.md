@@ -1,9 +1,11 @@
 
 # Toy ChatServer
+
 <p align="center">
 <img src="images/groupchat.png" width="100" >
 </p>
-This is a toy chat server. To use, just [download](https://github.com/piyush01123/Toy-ChatServer/releases/tag/binaries) and run the binaries as per your OS (Tested on MacOS and Ubuntu).
+
+This is a toy chat server. To use, just [dowload](https://github.com/piyush01123/Toy-ChatServer/releases/tag/binaries) and run the binaries as per your OS (Tested on MacOS and Ubuntu).
 
 **Main ideas:** Multi-threading, Socket programming
 
