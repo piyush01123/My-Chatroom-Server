@@ -38,18 +38,18 @@ Run client with tracker's IP address as argument (must be on same network or els
 ```
 
 ## Snapshots
-#### View from tracker:
-
-<img src="images/tracker.png" >
-
-#### View from alpha:
+#### View from client 1 (alpha):
 
 <img src="images/alpha.png" >
 
-#### View from beta:
+#### View from client 2 (beta):
 
 <img src="images/beta.png" >
 
-#### View from gamma:
+#### View from client 3 (gamma):
 
 <img src="images/gamma.png" >
+
+#### View from tracker:
+
+<img src="images/tracker.png" >
