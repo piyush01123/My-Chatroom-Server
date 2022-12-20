@@ -20,8 +20,10 @@ void exit_with_error(string err_msg)
 
 bool isValidPrivateIP(char *host_ip)
 {
-	regex p("(^192\.168\.(\d|\d\d|1\d\d|2[0-5][0-5])\.(\d|\d\d|1\d\d|2[0-5][0-5])$)|(^172\.(1[6-9]|2\d|3[0-1])\.(\d|\d\d|1\d\d|2[0-5][0-5])\.(\d|\d\d|1\d\d|2[0-5][0-5])$)|(^10\.(\d|\d\d|1\d\d|2[0-5][0-5])\.(\d|\d\d|1\d\d|2[0-5][0-5])\.(\d|\d\d|1\d\d|2[0-5][0-5])$)");
-	return regex_match(host_ip, p);
+	regex p1("^192\.168\.(\d|\d\d|1\d\d|2[0-5][0-5])\.(\d|\d\d|1\d\d|2[0-5][0-5])$");
+	regex p2("^172\.(1[6-9]|2\d|3[0-1])\.(\d|\d\d|1\d\d|2[0-5][0-5])\.(\d|\d\d|1\d\d|2[0-5][0-5])$");
+	regex p3("^10\.(\d|\d\d|1\d\d|2[0-5][0-5])\.(\d|\d\d|1\d\d|2[0-5][0-5])\.(\d|\d\d|1\d\d|2[0-5][0-5])$");
+	return regex_match(host_ip, p1) || regex_match(host_ip, p2) || regex_match(host_ip, p3);
 }
 
 void recv_msg(int sockfd)
