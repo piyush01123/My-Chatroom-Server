@@ -6,6 +6,7 @@
 #include <unistd.h> // read()
 #include <thread>
 #include <vector>
+#include <algorithm> //remove()
 #define PORT 8000
 using namespace std;
 vector<int> clients;
@@ -35,6 +36,13 @@ void recv_msg(int client_fd)
 		string bufstr(buffer);
 		cout << "new msg from " << client_fd << endl;
 		cout << bufstr << endl;
+		if (bufstr.size()>=4 && bufstr.substr(bufstr.size()-4)=="exit")
+		{
+			cout << client_fd << " is exiting..." << endl;
+			close(client_fd);
+			clients.erase(remove(clients.begin(),clients.end(),client_fd), clients.end());
+			return; // Client-specific thread will exit here
+		}
 		send_to_all(bufstr, client_fd);
 	}
 }
@@ -86,5 +94,6 @@ int main()
 		threads.push_back(move(th));
 	}
 	for (auto &t: threads) t.join();
+	shutdown(sockfd, SHUT_RDWR);
 	return 0;
 }

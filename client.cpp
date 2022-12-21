@@ -44,7 +44,13 @@ void send_msg(int sockfd, string username)
         string msg;
         getline(cin,msg);
         msg = username + ": " + msg;
-        send(sockfd, msg.c_str(), msg.length(), 0);
+        send(sockfd, msg.c_str(), msg.length(), 0); // must send exit signal
+	if (msg.size()>=4 && msg.substr(msg.size()-4)=="exit")
+	{
+		close(sockfd);
+		cout << "Exiting..." << endl;
+		exit(1);
+	}
     }
 }
 
