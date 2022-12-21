@@ -41,6 +41,11 @@ void recv_msg(int client_fd)
 			cout << client_fd << " is exiting..." << endl;
 			close(client_fd);
 			clients.erase(remove(clients.begin(),clients.end(),client_fd), clients.end());
+			if (clients.empty())
+			{
+				cout << "Everybody has left. Exiting..." << endl;
+				exit(1);
+			}
 			return; // Client-specific thread will exit here
 		}
 		send_to_all(bufstr, client_fd);
