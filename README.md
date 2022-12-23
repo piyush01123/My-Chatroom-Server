@@ -27,7 +27,7 @@ g++ -std=c++17 client.cpp -lpthread -o Client.mac
 ## Use this software
 This runs on a client-server model. There should be just 1 tracker whereas there can be several clients. The machine running the tracker can be a client too. The client can join and leave as they wish. Just like whatsapp, a new client will be able to view messages in the group from the point she joins.
 
-** Update: Exit ** Client can exit by typing exit. When all the clients exit, the tracker also exits. I decided that it is better this way than having a session run indefinitely.
+**Update:** Client can exit by typing exit. When all the clients exit, the tracker also exits. I decided that it is better this way than having a session run indefinitely.
 
 Run tracker:
 ```
