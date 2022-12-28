@@ -7,9 +7,12 @@
 #include <thread>
 #include <vector>
 #include <algorithm> //remove()
+#include <fstream>
 #define PORT 8000
 using namespace std;
 vector<int> clients;
+ofstream logger;
+
 
 void exit_with_error(string err_msg)
 {
@@ -44,11 +47,13 @@ void recv_msg(int client_fd)
 			if (clients.empty())
 			{
 				cout << "Everybody has left. Exiting..." << endl;
+				logger.close();
 				exit(1);
 			}
 			return; // Client-specific thread will exit here
 		}
 		send_to_all(bufstr, client_fd);
+		logger << bufstr << endl;
 	}
 }
 
@@ -66,6 +71,7 @@ int main()
 	cout << "Enter server password to be used for login..." << endl;
 	string password;
 	getline(cin, password);
+	logger.open("chat.log", ios::app);
 
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0), opt=1; // creates socket
 	if (sockfd<0)  exit_with_error("Error creating socket");
@@ -100,5 +106,6 @@ int main()
 	}
 	for (auto &t: threads) t.join();
 	shutdown(sockfd, SHUT_RDWR);
+	logger.close();
 	return 0;
 }
