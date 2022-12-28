@@ -29,6 +29,10 @@ This runs on a client-server model. There should be just 1 tracker whereas there
 
 **Update:** Client can exit by typing exit. When all the clients exit, the tracker also exits. I decided that it is better this way than having a session run indefinitely.
 
+
+**Update:** If a client presses ctrl+c, the tracker will detect that and gracefully handle it. Also, if tracker presses ctrl+c,all the clients will detect that and they will all gracefully exit.
+
+
 Run tracker:
 ```
 ./Tracker.linux
