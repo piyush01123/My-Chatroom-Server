@@ -36,7 +36,7 @@ void recv_msg(int client_fd)
 		string bufstr(buffer);
 		cout << "new msg from " << client_fd << endl;
 		cout << bufstr << endl;
-		if (bufstr.size()>=4 && bufstr.substr(bufstr.size()-4)=="exit")
+		if ((valread==0)||(bufstr.size()>=4 && bufstr.substr(bufstr.size()-4)=="exit"))
 		{
 			cout << client_fd << " is exiting..." << endl;
 			close(client_fd);

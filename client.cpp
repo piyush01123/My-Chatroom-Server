@@ -32,6 +32,7 @@ void recv_msg(int sockfd)
     {
         char buffer[1024] = {0};
         int valread = read(sockfd, buffer, 1024);
+	if (valread==0) exit_with_error("Tracker has left...");
         string bufstr(buffer);
         cout << bufstr << endl;    
     }
