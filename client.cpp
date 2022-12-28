@@ -65,7 +65,7 @@ string receive_single_msg(int sockfd)
 
 void random_colorize(string &str)
 {
-    vector<string> colors = vector<string>{"\033[31m","\033[32m","\033[33m","\033[34m","\033[35m","\033[36m","\033[37m"};
+    vector<string> colors = vector<string>{"\033[31m","\033[32m","\033[33m","\033[34m","\033[35m","\033[36m"};
     string reset = "\033[0m";
     srand(time(0));
     int idx = rand() % colors.size();
