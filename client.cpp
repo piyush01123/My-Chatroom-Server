@@ -65,7 +65,7 @@ string receive_single_msg(int sockfd)
 
 void random_colorize(string &str)
 {
-    vector<string> colors = vector<string>{"\033[31m","\033[32m","\033[33m","\033[34m","\033[35m","\033[36m","\033[37m"};
+    vector<string> colors = vector<string>{"\033[31m","\033[32m","\033[33m","\033[34m","\033[35m","\033[36m"};
     string reset = "\033[0m";
     srand(time(0));
     int idx = rand() % colors.size();
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
     getline(cin, username);
     random_colorize(username);
     send(sockfd, username.c_str(), username.length(), 0);
-    cout << "Hi "<<username<<", You have been added to the server.\nJust type your message and press ↵\nThis is like any other group chatting app!" << endl;
+    cout << "Hi "<<username<<", You have been added to the server...\nJust type your message and press ↵  To exit type exit" << endl;
 
     thread recv_thread(recv_msg, sockfd);
     thread send_thread(send_msg, sockfd, username);
